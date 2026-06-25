@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat6 - Admin Dashboard</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="admin-wrapper">
+    <nav class="admin-sidebar">
+      <div class="admin-brand">
+        <i class="fas fa-comment-dots"></i>
+        <span>Chat6 Admin</span>
+      </div>
+      <ul class="admin-nav">
+        <li class="active" onclick="showTab('dashboard')">
+          <i class="fas fa-chart-line"></i><span>Dashboard</span>
+        </li>
+        <li onclick="showTab('users')">
+          <i class="fas fa-users"></i><span>Users</span>
+        </li>
+        <li onclick="showTab('messages')">
+          <i class="fas fa-envelope"></i><span>Messages</span>
+        </li>
+        <li onclick="showTab('ads')">
+          <i class="fas fa-ad"></i><span>Advertisements</span>
+        </li>
+      </ul>
+      <div class="admin-nav-bottom">
+        <li onclick="logoutAdmin()">
+          <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+        </li>
+      </div>
+    </nav>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="page-title">Dashboard</h1>
+        <div class="admin-user">Admin</div>
+      </div>
+
+      <!-- Login Panel -->
+      <div id="admin-login" class="admin-login-panel">
+        <div class="login-card">
+          <i class="fas fa-shield-alt"></i>
+          <h2>Admin Login</h2>
+          <div class="input-group">
+            <input type="text" id="admin-user" placeholder="Username" value="admin">
+          </div>
+          <div class="input-group">
+            <input type="password" id="admin-pass" placeholder="Password" value="admin123">
+          </div>
+          <button class="btn-primary" onclick="adminLogin()">Login</button>
+        </div>
+      </div>
+
+      <!-- Dashboard -->
+      <div id="tab-dashboard" class="tab-content hidden">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-users">0</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-envelope"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-messages">0</div>
+              <div class="stat-label">Total Messages</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-ad"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-ads">0</div>
+              <div class="stat-label">Active Ads</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-mouse-pointer"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-clicks">0</div>
+              <div class="stat-label">Ad Clicks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div id="tab-users" class="tab-content hidden">
+        <div class="panel-header">
+          <h2>All Users</h2>
+        </div>
+        <div class="data-table-wrapper">
+          <table class="data-table" id="users-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Phone</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Messages Tab -->
+      <div id="tab-messages" class="tab-content hidden">
+        <div class="panel-header">
+          <h2>Recent Messages</h2>
+        </div>
+        <div class="data-table-wrapper">
+          <table class="data-table" id="messages-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Message</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Ads Tab -->
+      <div id="tab-ads" class="tab-content hidden">
+        <div class="panel-header">
+          <h2>Advertisements</h2>
+          <button class="btn-primary" onclick="openAdModal()">
+            <i class="fas fa-plus"></i> New Ad
+          </button>
+        </div>
+        <div class="data-table-wrapper">
+          <table class="data-table" id="ads-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Position</th>
+                <th>Clicks</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Ad Modal -->
+  <div class="modal hidden" id="ad-modal">
+    <div class="modal-overlay" onclick="closeAdModal()"></div>
+    <div class="modal-content">
+      <h3 id="modal-title">Create Advertisement</h3>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="ad-title" placeholder="Ad title">
+      </div>
+      <div class="form-group">
+        <label>Content</label>
+        <textarea id="ad-content" placeholder="Ad description..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" id="ad-image" placeholder="https://example.com/image.jpg">
+      </div>
+      <div class="form-group">
+        <label>Link</label>
+        <input type="text" id="ad-link" placeholder="https://example.com/offer">
+      </div>
+      <div class="form-group">
+        <label>Position</label>
+        <select id="ad-position">
+          <option value="chat_top">Chat Top</option>
+          <option value="sidebar">Sidebar</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" id="ad-active" checked> Active</label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-text" onclick="closeAdModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveAd()">Save Ad</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

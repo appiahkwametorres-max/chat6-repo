@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat6 - Register</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <div class="auth-screen">
+      <div class="auth-header">
+        <div class="logo">
+          <i class="fas fa-comment-dots"></i>
+          <h1>Chat6</h1>
+        </div>
+        <p class="tagline">Connect with your phone number</p>
+      </div>
+
+      <div class="auth-card" id="step1">
+        <h2>Create Account</h2>
+        <p class="subtitle">Enter your phone number to get started</p>
+        <div class="input-group">
+          <i class="fas fa-phone"></i>
+          <input type="tel" id="phone" placeholder="+1 234 567 8900" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="displayName" placeholder="Your Name" autocomplete="off">
+        </div>
+        <button class="btn-primary" onclick="sendOTP()">Send Verification Code</button>
+        <div class="auth-links">
+          <a href="/login">Already have an account? Login</a>
+        </div>
+      </div>
+
+      <div class="auth-card hidden" id="step2">
+        <h2>Verify Code</h2>
+        <p class="subtitle">Enter the 6-digit code sent to your phone</p>
+        <div class="otp-display" id="otp-display" style="display:none">
+          <p><strong>Demo OTP:</strong> <span id="otp-code"></span></p>
+          <p class="otp-note">(In production, this would be sent via SMS)</p>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-shield-alt"></i>
+          <input type="text" id="otp" placeholder="6-digit code" maxlength="6" autocomplete="off">
+        </div>
+        <button class="btn-primary" onclick="verifyOTP()">Verify</button>
+        <button class="btn-text" onclick="backToStep1()">Back</button>
+      </div>
+
+      <div class="auth-card hidden" id="step3">
+        <h2>Set Password</h2>
+        <p class="subtitle">Create a secure password for your account</p>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Password">
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="confirmPassword" placeholder="Confirm Password">
+        </div>
+        <button class="btn-primary" onclick="completeRegister()">Create Account</button>
+        <button class="btn-text" onclick="backToStep2()">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat6 - Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <div class="auth-screen">
+      <div class="auth-header">
+        <div class="logo">
+          <i class="fas fa-comment-dots"></i>
+          <h1>Chat6</h1>
+        </div>
+        <p class="tagline">Welcome back</p>
+      </div>
+
+      <div class="auth-card">
+        <h2>Login</h2>
+        <p class="subtitle">Enter your phone number and password</p>
+        <div class="input-group">
+          <i class="fas fa-phone"></i>
+          <input type="tel" id="phone" placeholder="Phone number" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Password">
+        </div>
+        <button class="btn-primary" onclick="login()">Login</button>
+        <div class="auth-links">
+          <a href="/register">Don't have an account? Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat6 - Secure Messenger</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .landing { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 20px; background: #0f1419; }
+    .landing .logo { color: #25d366; font-size: 80px; margin-bottom: 16px; }
+    .landing h1 { color: #fff; font-size: 36px; margin-bottom: 8px; }
+    .landing p { color: #8a9199; font-size: 16px; max-width: 400px; margin-bottom: 32px; line-height: 1.6; }
+    .landing-buttons { display: flex; gap: 16px; }
+    .landing .btn-primary { width: auto; padding: 14px 32px; }
+    .landing .btn-secondary { padding: 14px 32px; background: transparent; border: 2px solid #25d366; color: #25d366; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+    .landing .btn-secondary:hover { background: #25d366; color: #0f1419; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 800px; margin-top: 40px; }
+    .feature { background: #1a1f2e; padding: 24px; border-radius: 12px; border: 1px solid #2a3040; }
+    .feature i { color: #25d366; font-size: 28px; margin-bottom: 12px; }
+    .feature h3 { color: #fff; font-size: 16px; margin-bottom: 6px; }
+    .feature p { color: #8a9199; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="landing">
+    <i class="fas fa-comment-dots logo"></i>
+    <h1>Chat6</h1>
+    <p>Secure, real-time messaging with phone number authentication. Connect with anyone, anywhere.</p>
+    <div class="landing-buttons">
+      <a href="/register" class="btn-primary">Get Started</a>
+      <a href="/login" class="btn-secondary">Login</a>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Secure</h3>
+        <p>End-to-end encrypted conversations with phone verification</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-bolt"></i>
+        <h3>Real-time</h3>
+        <p>Instant message delivery with live typing indicators</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-mobile-alt"></i>
+        <h3>Mobile Ready</h3>
+        <p>Works perfectly on any smartphone or desktop browser</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

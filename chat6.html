@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chat6 - Secure Messenger</title>
+<style>
+/* ==================== BASE ==================== */
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; height:100%; background:#0f1419; color:#e1e8ed; overflow:hidden; }
+#app { width:100%; height:100%; }
+.hidden { display:none !important; }
+.page { width:100%; height:100%; overflow:auto; }
+
+/* ==================== LANDING ==================== */
+.landing { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; text-align:center; padding:20px; background:#0f1419; }
+.landing .logo-big { color:#25d366; font-size:80px; margin-bottom:16px; }
+.landing h1 { color:#fff; font-size:36px; margin-bottom:8px; }
+.landing p { color:#8a9199; font-size:16px; max-width:400px; margin-bottom:32px; line-height:1.6; }
+.landing-buttons { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+.landing .btn-primary { width:auto; padding:14px 32px; background:#25d366; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:600; cursor:pointer; text-decoration:none; transition:background 0.2s; }
+.landing .btn-primary:hover { background:#1ebd57; }
+.landing .btn-secondary { padding:14px 32px; background:transparent; border:2px solid #25d366; color:#25d366; border-radius:10px; font-size:16px; font-weight:600; cursor:pointer; text-decoration:none; transition:all 0.2s; }
+.landing .btn-secondary:hover { background:#25d366; color:#0f1419; }
+.features { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; max-width:800px; margin-top:40px; }
+.feature { background:#1a1f2e; padding:24px; border-radius:12px; border:1px solid #2a3040; }
+.feature .icon { color:#25d366; font-size:28px; margin-bottom:12px; }
+.feature h3 { color:#fff; font-size:16px; margin-bottom:6px; }
+.feature p { color:#8a9199; font-size:13px; }
+
+/* ==================== AUTH ==================== */
+.auth-screen { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; background:#0f1419; }
+.auth-header { text-align:center; margin-bottom:30px; }
+.auth-logo { color:#25d366; font-size:48px; margin-bottom:8px; }
+.auth-logo h1 { color:#fff; font-size:28px; margin-top:8px; }
+.tagline { color:#8a9199; font-size:15px; margin-top:6px; }
+
+.auth-card { background:#1a1f2e; border-radius:16px; padding:32px; width:100%; max-width:380px; border:1px solid #2a3040; }
+.auth-card h2 { color:#fff; font-size:22px; margin-bottom:6px; }
+.subtitle { color:#8a9199; font-size:14px; margin-bottom:24px; }
+
+.input-group { display:flex; align-items:center; background:#0f1419; border:1px solid #2a3040; border-radius:10px; padding:12px 14px; margin-bottom:14px; transition:border-color 0.2s; }
+.input-group:focus-within { border-color:#25d366; }
+.input-group .icon { color:#8a9199; font-size:16px; margin-right:12px; width:20px; text-align:center; font-style:normal; }
+.input-group input { background:transparent; border:none; outline:none; color:#fff; font-size:16px; flex:1; width:100%; }
+.input-group input::placeholder { color:#5a6069; }
+
+.btn-primary { width:100%; padding:14px; background:#25d366; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:600; cursor:pointer; transition:background 0.2s; margin-top:8px; }
+.btn-primary:hover { background:#1ebd57; }
+.btn-text { width:100%; padding:14px; background:transparent; color:#8a9199; border:none; font-size:15px; cursor:pointer; margin-top:8px; transition:color 0.2s; }
+.btn-text:hover { color:#fff; }
+.auth-links { text-align:center; margin-top:20px; }
+.auth-links a { color:#25d366; text-decoration:none; font-size:14px; cursor:pointer; }
+.auth-links a:hover { text-decoration:underline; }
+
+.otp-display { background:#0f1419; border:1px dashed #25d366; border-radius:8px; padding:12px; margin-bottom:16px; text-align:center; }
+.otp-display p { color:#fff; font-size:14px; }
+.otp-code { color:#25d366; font-size:24px; font-weight:700; letter-spacing:4px; }
+.otp-note { color:#5a6069; font-size:12px; }
+
+/* ==================== CHAT APP ==================== */
+.app-container { width:100%; height:100vh; max-width:900px; margin:0 auto; display:flex; background:#fff; position:relative; }
+.sidebar { width:320px; display:flex; flex-direction:column; border-right:1px solid #2a3040; background:#1a1f2e; flex-shrink:0; }
+.sidebar-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#0f1419; border-bottom:1px solid #2a3040; }
+.user-info { display:flex; align-items:center; gap:12px; }
+.avatar { width:42px; height:42px; border-radius:50%; background:#25d366; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; flex-shrink:0; }
+.user-name { color:#fff; font-weight:600; font-size:15px; }
+.user-status { color:#25d366; font-size:12px; }
+.btn-icon { background:none; border:none; color:#8a9199; font-size:18px; cursor:pointer; padding:8px; transition:color 0.2s; }
+.btn-icon:hover { color:#fff; }
+.search-bar { display:flex; align-items:center; padding:12px 16px; background:#1a1f2e; border-bottom:1px solid #2a3040; }
+.search-bar .icon { color:#5a6069; font-size:14px; margin-right:10px; font-style:normal; }
+.search-bar input { background:transparent; border:none; outline:none; color:#fff; font-size:14px; flex:1; }
+.search-bar input::placeholder { color:#5a6069; }
+.contacts-list { flex:1; overflow-y:auto; }
+.contact-item { display:flex; align-items:center; padding:14px 16px; cursor:pointer; transition:background 0.15s; border-bottom:1px solid #252a38; }
+.contact-item:hover, .contact-item.active { background:#252a38; }
+.contact-item .avatar { width:48px; height:48px; font-size:18px; margin-right:14px; }
+.contact-info { flex:1; min-width:0; }
+.contact-name { color:#fff; font-size:15px; font-weight:600; margin-bottom:4px; }
+.contact-meta { color:#8a9199; font-size:13px; }
+.contact-status-dot { width:10px; height:10px; border-radius:50%; background:#5a6069; flex-shrink:0; transition:background 0.3s; }
+.contact-status-dot.online { background:#25d366; box-shadow:0 0 6px rgba(37,211,102,0.4); }
+.contact-status-dot.recently { background:#f5c542; }
+.loading { text-align:center; padding:40px; color:#8a9199; font-size:14px; }
+
+.chat-area { flex:1; display:flex; flex-direction:column; background:#0f1419; min-width:0; }
+.chat-placeholder { flex:1; display:flex; align-items:center; justify-content:center; }
+.placeholder-content { text-align:center; color:#5a6069; }
+.placeholder-content .icon { font-size:64px; margin-bottom:16px; color:#2a3040; font-style:normal; }
+.placeholder-content h2 { color:#8a9199; font-size:20px; margin-bottom:8px; }
+.placeholder-content p { font-size:14px; }
+
+.chat-view { flex:1; display:flex; flex-direction:column; }
+.chat-header { display:flex; align-items:center; padding:14px 20px; background:#1a1f2e; border-bottom:1px solid #2a3040; }
+.back-btn { display:none; margin-right:12px; }
+.chat-contact-info { display:flex; align-items:center; gap:12px; flex:1; }
+.chat-contact-info .contact-name { color:#fff; font-weight:600; font-size:16px; }
+.chat-contact-info .contact-status { color:#8a9199; font-size:13px; }
+
+.ad-banner { padding:8px 16px; background:#1a1f2e; border-bottom:1px solid #2a3040; }
+.ad-banner .ad-item { display:flex; align-items:center; gap:10px; background:#252a38; border-radius:8px; padding:10px 14px; cursor:pointer; transition:background 0.2s; }
+.ad-banner .ad-item:hover { background:#2e3546; }
+.ad-banner img { width:40px; height:40px; border-radius:6px; object-fit:cover; }
+.ad-banner .ad-text { flex:1; }
+.ad-banner .ad-title { color:#fff; font-size:13px; font-weight:600; }
+.ad-banner .ad-desc { color:#8a9199; font-size:12px; }
+.ad-badge { background:#f5c542; color:#1a1f2e; font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; }
+
+.messages-area { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; background:#0f1419; }
+.message { max-width:70%; padding:10px 14px; border-radius:14px; margin-bottom:8px; word-wrap:break-word; font-size:15px; line-height:1.4; animation:msgSlide 0.25s ease-out; position:relative; }
+@keyframes msgSlide { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.message.sent { align-self:flex-end; background:#005c4b; color:#fff; border-bottom-right-radius:4px; }
+.message.received { align-self:flex-start; background:#1a1f2e; color:#fff; border-bottom-left-radius:4px; border:1px solid #2a3040; }
+.message-time { font-size:11px; color:rgba(255,255,255,0.5); margin-top:4px; text-align:right; }
+.typing-indicator { padding:0 20px 8px; color:#8a9199; font-size:13px; }
+.typing-dots { display:inline-block; width:6px; height:6px; border-radius:50%; background:#8a9199; animation:dotPulse 1.2s infinite; }
+@keyframes dotPulse { 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
+
+.message-input-area { display:flex; align-items:center; padding:12px 16px; background:#1a1f2e; border-top:1px solid #2a3040; gap:10px; }
+.message-input-area input { flex:1; padding:12px 18px; border:none; border-radius:24px; background:#0f1419; color:#fff; font-size:15px; outline:none; border:1px solid #2a3040; }
+.message-input-area input::placeholder { color:#5a6069; }
+.message-input-area input:focus { border-color:#25d366; }
+.btn-send { width:44px; height:44px; border-radius:50%; background:#25d366; color:#fff; border:none; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s; flex-shrink:0; }
+.btn-send:hover { background:#1ebd57; }
+
+/* ==================== ADMIN ==================== */
+.admin-wrapper { display:flex; min-height:100vh; }
+.admin-sidebar { width:260px; background:#1a1f2e; border-right:1px solid #2a3040; display:flex; flex-direction:column; position:fixed; height:100vh; left:0; top:0; }
+.admin-brand { padding:24px 20px; display:flex; align-items:center; gap:12px; color:#25d366; font-size:20px; font-weight:700; border-bottom:1px solid #2a3040; }
+.admin-brand .icon { font-size:24px; font-style:normal; }
+.admin-nav { list-style:none; padding:12px 0; flex:1; }
+.admin-nav li { display:flex; align-items:center; gap:12px; padding:14px 20px; cursor:pointer; color:#8a9199; transition:all 0.2s; font-size:15px; }
+.admin-nav li:hover { background:#252a38; color:#fff; }
+.admin-nav li.active { background:#25d366; color:#0f1419; font-weight:600; }
+.admin-nav li .icon { font-size:18px; width:24px; text-align:center; font-style:normal; }
+.admin-nav-bottom { border-top:1px solid #2a3040; padding:12px 0; list-style:none; }
+.admin-nav-bottom li { display:flex; align-items:center; gap:12px; padding:14px 20px; cursor:pointer; color:#e74c3c; transition:all 0.2s; font-size:15px; }
+.admin-nav-bottom li:hover { background:#252a38; }
+.admin-nav-bottom li .icon { font-size:18px; width:24px; text-align:center; font-style:normal; }
+.admin-main { flex:1; margin-left:260px; padding:24px 32px; overflow:auto; height:100vh; }
+.admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; padding-bottom:16px; border-bottom:1px solid #2a3040; }
+.admin-header h1 { color:#fff; font-size:24px; }
+.admin-user { background:#25d366; color:#0f1419; padding:8px 16px; border-radius:8px; font-weight:600; font-size:14px; }
+
+.admin-login-panel { display:flex; align-items:center; justify-content:center; min-height:70vh; }
+.login-card { background:#1a1f2e; border:1px solid #2a3040; border-radius:16px; padding:40px; width:100%; max-width:400px; text-align:center; }
+.login-card .icon { font-size:48px; color:#25d366; margin-bottom:16px; font-style:normal; }
+.login-card h2 { color:#fff; margin-bottom:24px; }
+.form-group { margin-bottom:16px; text-align:left; }
+.form-group label { display:block; color:#8a9199; font-size:13px; margin-bottom:6px; }
+.form-group input, .form-group textarea, .form-group select { width:100%; padding:12px 14px; background:#0f1419; border:1px solid #2a3040; border-radius:8px; color:#fff; font-size:14px; outline:none; transition:border-color 0.2s; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:#25d366; }
+.form-group textarea { min-height:80px; resize:vertical; }
+.form-group select option { background:#0f1419; }
+
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:28px; }
+.stat-card { background:#1a1f2e; border:1px solid #2a3040; border-radius:12px; padding:24px; display:flex; align-items:center; gap:16px; }
+.stat-icon { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; color:#fff; flex-shrink:0; }
+.stat-icon.blue { background:#3b82f6; }
+.stat-icon.green { background:#25d366; }
+.stat-icon.orange { background:#f5a623; }
+.stat-icon.purple { background:#8b5cf6; }
+.stat-value { color:#fff; font-size:28px; font-weight:700; }
+.stat-label { color:#8a9199; font-size:14px; margin-top:4px; }
+
+.panel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.panel-header h2 { color:#fff; font-size:20px; }
+.data-table-wrapper { background:#1a1f2e; border:1px solid #2a3040; border-radius:12px; overflow:hidden; }
+.data-table { width:100%; border-collapse:collapse; }
+.data-table th { background:#0f1419; color:#8a9199; font-size:13px; font-weight:600; text-align:left; padding:14px 16px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid #2a3040; }
+.data-table td { padding:14px 16px; color:#e1e8ed; font-size:14px; border-bottom:1px solid #252a38; }
+.data-table tr:last-child td { border-bottom:none; }
+.data-table tbody tr:hover { background:#252a38; }
+.status-badge { display:inline-block; padding:4px 12px; border-radius:12px; font-size:12px; font-weight:600; }
+.status-badge.online { background:rgba(37,211,102,0.15); color:#25d366; }
+.status-badge.offline { background:rgba(138,145,153,0.15); color:#8a9199; }
+.status-badge.active { background:rgba(37,211,102,0.15); color:#25d366; }
+.status-badge.inactive { background:rgba(231,76,60,0.15); color:#e74c3c; }
+.btn-small { padding:6px 14px; border:none; border-radius:6px; font-size:12px; cursor:pointer; transition:all 0.2s; }
+.btn-delete { background:rgba(231,76,60,0.15); color:#e74c3c; }
+.btn-delete:hover { background:#e74c3c; color:#fff; }
+.btn-edit { background:rgba(59,130,246,0.15); color:#3b82f6; margin-right:6px; }
+.btn-edit:hover { background:#3b82f6; color:#fff; }
+
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; z-index:100; display:flex; align-items:center; justify-content:center; }
+.modal-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); }
+.modal-content { position:relative; background:#1a1f2e; border:1px solid #2a3040; border-radius:16px; padding:28px; width:100%; max-width:480px; z-index:1; }
+.modal-content h3 { color:#fff; font-size:20px; margin-bottom:20px; }
+.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; padding-top:20px; border-top:1px solid #2a3040; }
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#2a3040; border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:#3a4050; }
+
+/* ==================== MOBILE ==================== */
+@media (max-width: 768px) {
+  .app-container { max-width:100%; }
+  .sidebar { position:absolute; top:0; left:0; width:100%; height:100%; z-index:10; transition:transform 0.3s; }
+  .sidebar.chat-open { transform:translateX(-100%); }
+  .back-btn { display:flex; }
+  .chat-area { width:100%; }
+  .admin-sidebar { width:100%; position:relative; height:auto; }
+  .admin-main { margin-left:0; padding:16px; }
+  .admin-wrapper { flex-direction:column; }
+  .stats-grid { grid-template-columns:1fr; }
+  .landing h1 { font-size:28px; }
+  .landing .logo-big { font-size:56px; }
+}
+
+@media (min-width: 769px) {
+  .chat-page { display:flex; justify-content:center; align-items:center; background:#1a1f2e; }
+  .chat-page .app-container { height:90vh; border-radius:12px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+}
+
+/* Toast */
+.toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#1a1f2e; color:#fff; padding:12px 24px; border-radius:8px; border:1px solid #2a3040; font-size:14px; z-index:200; opacity:0; transition:opacity 0.3s; }
+.toast.show { opacity:1; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ======== LANDING PAGE ======== -->
+<div id="page-landing" class="page landing">
+  <div class="logo-big">💬</div>
+  <h1>Chat6</h1>
+  <p>Secure, real-time messaging with phone number authentication. Connect with anyone, anywhere.</p>
+  <div class="landing-buttons">
+    <button class="btn-primary" onclick="navigate('register')">Get Started</button>
+    <button class="btn-secondary" onclick="navigate('login')">Login</button>
+  </div>
+  <div class="features">
+    <div class="feature">
+      <div class="icon">🛡️</div>
+      <h3>Secure</h3>
+      <p>End-to-end encrypted conversations with phone verification</p>
+    </div>
+    <div class="feature">
+      <div class="icon">⚡</div>
+      <h3>Real-time</h3>
+      <p>Instant message delivery with live typing indicators</p>
+    </div>
+    <div class="feature">
+      <div class="icon">📱</div>
+      <h3>Mobile Ready</h3>
+      <p>Works perfectly on any smartphone or desktop browser</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== LOGIN ======== -->
+<div id="page-login" class="page hidden">
+  <div class="auth-screen">
+    <div class="auth-header">
+      <div class="auth-logo">💬<h1>Chat6</h1></div>
+      <p class="tagline">Welcome back</p>
+    </div>
+    <div class="auth-card">
+      <h2>Login</h2>
+      <p class="subtitle">Enter your phone number and password</p>
+      <div class="input-group">
+        <i class="icon">📞</i>
+        <input type="tel" id="login-phone" placeholder="Phone number" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <i class="icon">🔒</i>
+        <input type="password" id="login-password" placeholder="Password">
+      </div>
+      <button class="btn-primary" onclick="login()">Login</button>
+      <div class="auth-links">
+        <a onclick="navigate('register')">Don't have an account? Register</a>
+      </div>
+      <div class="auth-links" style="margin-top:8px">
+        <a onclick="navigate('landing')">← Back to home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== REGISTER ======== -->
+<div id="page-register" class="page hidden">
+  <div class="auth-screen">
+    <div class="auth-header">
+      <div class="auth-logo">💬<h1>Chat6</h1></div>
+      <p class="tagline">Connect with your phone number</p>
+    </div>
+    <div id="reg-step1" class="auth-card">
+      <h2>Create Account</h2>
+      <p class="subtitle">Enter your phone number to get started</p>
+      <div class="input-group">
+        <i class="icon">📞</i>
+        <input type="tel" id="reg-phone" placeholder="+1 234 567 8900" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <i class="icon">👤</i>
+        <input type="text" id="reg-name" placeholder="Your Name" autocomplete="off">
+      </div>
+      <button class="btn-primary" onclick="sendOTP()">Send Verification Code</button>
+      <div class="auth-links">
+        <a onclick="navigate('login')">Already have an account? Login</a>
+      </div>
+      <div class="auth-links" style="margin-top:8px">
+        <a onclick="navigate('landing')">← Back to home</a>
+      </div>
+    </div>
+    <div id="reg-step2" class="auth-card hidden">
+      <h2>Verify Code</h2>
+      <p class="subtitle">Enter the 6-digit code sent to your phone</p>
+      <div class="otp-display" id="otp-display">
+        <p><strong>Demo OTP:</strong> <span class="otp-code" id="otp-code"></span></p>
+        <p class="otp-note">(In production, this would be sent via SMS)</p>
+      </div>
+      <div class="input-group">
+        <i class="icon">🛡️</i>
+        <input type="text" id="reg-otp" placeholder="6-digit code" maxlength="6" autocomplete="off">
+      </div>
+      <button class="btn-primary" onclick="verifyOTP()">Verify</button>
+      <button class="btn-text" onclick="backToStep1()">Back</button>
+    </div>
+    <div id="reg-step3" class="auth-card hidden">
+      <h2>Set Password</h2>
+      <p class="subtitle">Create a secure password for your account</p>
+      <div class="input-group">
+        <i class="icon">🔒</i>
+        <input type="password" id="reg-password" placeholder="Password">
+      </div>
+      <div class="input-group">
+        <i class="icon">🔒</i>
+        <input type="password" id="reg-confirm" placeholder="Confirm Password">
+      </div>
+      <button class="btn-primary" onclick="completeRegister()">Create Account</button>
+      <button class="btn-text" onclick="backToStep2()">Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== CHAT ======== -->
+<div id="page-chat" class="page chat-page hidden">
+  <div class="app-container" id="chat-app">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="user-info">
+          <div class="avatar" id="chat-user-avatar">C6</div>
+          <div>
+            <div class="user-name" id="chat-user-name">Chat6 User</div>
+            <div class="user-status">online</div>
+          </div>
+        </div>
+        <button class="btn-icon" onclick="logout()" title="Logout">↩️</button>
+      </div>
+      <div class="search-bar">
+        <i class="icon">🔍</i>
+        <input type="text" id="search-users" placeholder="Search contacts..." oninput="searchUsers()">
+      </div>
+      <div class="contacts-list" id="contacts-list">
+        <div class="loading">Loading contacts...</div>
+      </div>
+    </div>
+    <div class="chat-area" id="chat-area">
+      <div class="chat-placeholder" id="chat-placeholder">
+        <div class="placeholder-content">
+          <div class="icon">💬</div>
+          <h2>Select a contact to start chatting</h2>
+          <p>Your messages are secure and private</p>
+        </div>
+      </div>
+      <div class="chat-view hidden" id="chat-view">
+        <div class="chat-header">
+          <button class="btn-icon back-btn" onclick="closeChat()">⬅️</button>
+          <div class="chat-contact-info">
+            <div class="avatar" id="contact-avatar">U</div>
+            <div>
+              <div class="contact-name" id="contact-name">User</div>
+              <div class="contact-status" id="contact-status">offline</div>
+            </div>
+          </div>
+        </div>
+        <div class="ad-banner" id="ad-banner"></div>
+        <div class="messages-area" id="messages-area"></div>
+        <div class="typing-indicator hidden" id="typing-indicator">
+          <span class="typing-dots"></span> typing...
+        </div>
+        <div class="message-input-area">
+          <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" onkeypress="if(event.key==='Enter')sendMessage()">
+          <button class="btn-send" onclick="sendMessage()">📤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== ADMIN ======== -->
+<div id="page-admin" class="page hidden">
+  <div class="admin-wrapper">
+    <nav class="admin-sidebar">
+      <div class="admin-brand">
+        <i class="icon">💬</i>
+        <span>Chat6 Admin</span>
+      </div>
+      <ul class="admin-nav">
+        <li class="active" onclick="showAdminTab('dashboard', this)">
+          <i class="icon">📊</i><span>Dashboard</span>
+        </li>
+        <li onclick="showAdminTab('users', this)">
+          <i class="icon">👥</i><span>Users</span>
+        </li>
+        <li onclick="showAdminTab('messages', this)">
+          <i class="icon">✉️</i><span>Messages</span>
+        </li>
+        <li onclick="showAdminTab('ads', this)">
+          <i class="icon">📢</i><span>Advertisements</span>
+        </li>
+      </ul>
+      <div class="admin-nav-bottom">
+        <li onclick="logoutAdmin()">
+          <i class="icon">🚪</i><span>Logout</span>
+        </li>
+      </div>
+    </nav>
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="page-title">Dashboard</h1>
+        <div class="admin-user">Admin</div>
+      </div>
+      <div id="admin-login" class="admin-login-panel">
+        <div class="login-card">
+          <i class="icon">🛡️</i>
+          <h2>Admin Login</h2>
+          <div class="input-group" style="margin-bottom:14px">
+            <input type="text" id="admin-user" placeholder="Username" value="admin">
+          </div>
+          <div class="input-group" style="margin-bottom:14px">
+            <input type="password" id="admin-pass" placeholder="Password" value="admin123">
+          </div>
+          <button class="btn-primary" onclick="adminLogin()">Login</button>
+        </div>
+      </div>
+      <div id="tab-dashboard" class="tab-content hidden">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">👥</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-users">0</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">✉️</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-messages">0</div>
+              <div class="stat-label">Total Messages</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange">📢</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-ads">0</div>
+              <div class="stat-label">Active Ads</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">🖱️</div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-clicks">0</div>
+              <div class="stat-label">Ad Clicks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="tab-users" class="tab-content hidden">
+        <div class="panel-header"><h2>All Users</h2></div>
+        <div class="data-table-wrapper">
+          <table class="data-table" id="users-table">
+            <thead><tr><th>ID</th><th>Phone</th><th>Name</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="tab-messages" class="tab-content hidden">
+        <div class="panel-header"><h2>Recent Messages</h2></div>
+        <div class="data-table-wrapper">
+          <table class="data-table" id="messages-table">
+            <thead><tr><th>ID</th><th>From</th><th>To</th><th>Message</th><th>Time</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="tab-ads" class="tab-content hidden">
+        <div class="panel-header">
+          <h2>Advertisements</h2>
+          <button class="btn-primary" style="width:auto" onclick="openAdModal()">➕ New Ad</button>
+        </div>
+        <div class="data-table-wrapper">
+          <table class="data-table" id="ads-table">
+            <thead><tr><th>ID</th><th>Title</th><th>Position</th><th>Clicks</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ======== AD MODAL ======== -->
+<div class="modal hidden" id="ad-modal">
+  <div class="modal-overlay" onclick="closeAdModal()"></div>
+  <div class="modal-content">
+    <h3 id="modal-title">Create Advertisement</h3>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="ad-title" placeholder="Ad title">
+    </div>
+    <div class="form-group">
+      <label>Content</label>
+      <textarea id="ad-content" placeholder="Ad description..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Image URL</label>
+      <input type="text" id="ad-image" placeholder="https://example.com/image.jpg">
+    </div>
+    <div class="form-group">
+      <label>Link</label>
+      <input type="text" id="ad-link" placeholder="https://example.com/offer">
+    </div>
+    <div class="form-group">
+      <label>Position</label>
+      <select id="ad-position">
+        <option value="chat_top">Chat Top</option>
+        <option value="sidebar">Sidebar</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" id="ad-active" checked> Active</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-text" onclick="closeAdModal()">Cancel</button>
+      <button class="btn-primary" style="width:auto" onclick="saveAd()">Save Ad</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ======================== DATA STORE ======================== */
+const DB = {
+  users: () => JSON.parse(localStorage.getItem('chat6_users') || '[]'),
+  setUsers: (u) => localStorage.setItem('chat6_users', JSON.stringify(u)),
+  messages: () => JSON.parse(localStorage.getItem('chat6_messages') || '[]'),
+  setMessages: (m) => localStorage.setItem('chat6_messages', JSON.stringify(m)),
+  ads: () => JSON.parse(localStorage.getItem('chat6_ads') || '[]'),
+  setAds: (a) => localStorage.setItem('chat6_ads', JSON.stringify(a)),
+  session: () => JSON.parse(localStorage.getItem('chat6_session') || 'null'),
+  setSession: (s) => localStorage.setItem('chat6_session', JSON.stringify(s)),
+  adminSession: () => localStorage.getItem('chat6_admin_token'),
+  setAdminSession: (t) => localStorage.setItem('chat6_admin_token', t),
+};
+
+// Seed demo data if empty
+function seedData() {
+  if (DB.users().length === 0) {
+    const now = new Date().toISOString();
+    const demoUsers = [
+      { id:1, phone_number:'+1234567890', display_name:'Alice', password:'demo123', status:'online', created_at:now },
+      { id:2, phone_number:'+1987654321', display_name:'Bob', password:'demo123', status:'offline', created_at:now },
+      { id:3, phone_number:'+1555000111', display_name:'Charlie', password:'demo123', status:'online', created_at:now },
+      { id:4, phone_number:'+1444999888', display_name:'Diana', password:'demo123', status:'offline', created_at:now },
+    ];
+    DB.setUsers(demoUsers);
+  }
+  if (DB.ads().length === 0) {
+    const demoAds = [
+      { id:1, title:'Premium Upgrade', content:'Unlock unlimited messaging and themes', image_url:'https://cdn-icons-png.flaticon.com/512/2922/2922506.png', link:'https://example.com', position:'chat_top', active:1, clicks:42 },
+      { id:2, title:'New Feature', content:'Voice messages are here!', image_url:'https://cdn-icons-png.flaticon.com/512/727/727218.png', link:'https://example.com', position:'chat_top', active:1, clicks:18 },
+    ];
+    DB.setAds(demoAds);
+  }
+}
+seedData();
+
+let nextId = (key) => {
+  const items = JSON.parse(localStorage.getItem('chat6_'+key) || '[]');
+  return items.length ? Math.max(...items.map(i=>i.id)) + 1 : 1;
+};
+
+/* ======================== NAVIGATION ======================== */
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById('page-' + page).classList.remove('hidden');
+  if (page === 'chat') initChat();
+  if (page === 'admin') initAdmin();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ======================== AUTH ======================== */
+let storedOtp = '', regData = { phone:'', name:'' };
+
+function switchStep(id) {
+  document.querySelectorAll('#page-register .auth-card').forEach(c => c.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function sendOTP() {
+  const phone = document.getElementById('reg-phone').value.trim();
+  const name = document.getElementById('reg-name').value.trim();
+  if (!phone || !name) { showToast('Please fill in all fields'); return; }
+  regData = { phone, name };
+  storedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+  document.getElementById('otp-code').textContent = storedOtp;
+  document.getElementById('otp-display').style.display = 'block';
+  switchStep('reg-step2');
+}
+
+function verifyOTP() {
+  const entered = document.getElementById('reg-otp').value.trim();
+  if (entered !== storedOtp) { showToast('Invalid verification code'); return; }
+  switchStep('reg-step3');
+}
+
+function backToStep1() { switchStep('reg-step1'); storedOtp = ''; }
+function backToStep2() { switchStep('reg-step2'); }
+
+function completeRegister() {
+  const password = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  if (!password || password.length < 4) { showToast('Password must be at least 4 characters'); return; }
+  if (password !== confirm) { showToast('Passwords do not match'); return; }
+
+  const users = DB.users();
+  if (users.find(u => u.phone_number === regData.phone)) { showToast('Phone number already registered'); return; }
+
+  const newUser = {
+    id: nextId('users'), phone_number: regData.phone, display_name: regData.name,
+    password, status: 'online', created_at: new Date().toISOString(), is_admin: false
+  };
+  users.push(newUser); DB.setUsers(users);
+  DB.setSession({ user: newUser, token: 'tok_' + newUser.id });
+  showToast('Account created!');
+  navigate('chat');
+}
+
+function login() {
+  const phone = document.getElementById('login-phone').value.trim();
+  const password = document.getElementById('login-password').value;
+  if (!phone || !password) { showToast('Please enter phone and password'); return; }
+
+  const user = DB.users().find(u => u.phone_number === phone && u.password === password);
+  if (!user) { showToast('Invalid phone or password'); return; }
+
+  DB.setSession({ user, token: 'tok_' + user.id });
+  if (user.is_admin) { navigate('admin'); } else { navigate('chat'); }
+}
+
+function logout() {
+  DB.setSession(null); navigate('landing');
+}
+
+function escapeHtml(text) {
+  const d = document.createElement('div'); d.textContent = text; return d.innerHTML;
+}
+
+/* ======================== CHAT ======================== */
+let currentUser = null, currentChat = null, allUsers = [];
+let typingTimeout;
+
+function initChat() {
+  const s = DB.session();
+  if (!s) { navigate('login'); return; }
+  currentUser = s.user;
+  document.getElementById('chat-user-name').textContent = currentUser.display_name || currentUser.phone_number;
+  document.getElementById('chat-user-avatar').textContent = (currentUser.display_name || 'U')[0].toUpperCase();
+  loadContacts();
+  loadChatAds();
+  document.getElementById('message-input').addEventListener('input', () => {
+    if (!currentChat) return;
+    document.getElementById('typing-indicator').classList.remove('hidden');
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      document.getElementById('typing-indicator').classList.add('hidden');
+    }, 1500);
+  });
+}
+
+function loadContacts() {
+  allUsers = DB.users().filter(u => u.id !== currentUser.id);
+  renderContacts(allUsers);
+}
+
+function renderContacts(users) {
+  const list = document.getElementById('contacts-list');
+  list.innerHTML = '';
+  if (!users.length) { list.innerHTML = '<div class="loading">No contacts found</div>'; return; }
+  users.forEach(u => {
+    const div = document.createElement('div');
+    div.className = 'contact-item';
+    div.dataset.id = u.id;
+    div.onclick = () => openChat(u);
+    div.innerHTML = `
+      <div class="avatar" style="background:${stringColor(u.display_name||u.phone_number)}">${(u.display_name||u.phone_number)[0].toUpperCase()}</div>
+      <div class="contact-info">
+        <div class="contact-name">${escapeHtml(u.display_name||u.phone_number)}</div>
+        <div class="contact-meta">${u.phone_number}</div>
+      </div>
+      <div class="contact-status-dot ${u.status==='online'?'online':''}" id="status-dot-${u.id}"></div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function stringColor(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h);
+  const hue = Math.abs(h % 360);
+  return `hsl(${hue}, 70%, 45%)`;
+}
+
+function searchUsers() {
+  const q = document.getElementById('search-users').value.trim().toLowerCase();
+  if (!q) { renderContacts(allUsers); return; }
+  const filtered = allUsers.filter(u => (u.display_name||'').toLowerCase().includes(q) || u.phone_number.includes(q));
+  renderContacts(filtered);
+}
+
+function openChat(user) {
+  currentChat = user;
+  document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+  const el = document.querySelector(`.contact-item[data-id="${user.id}"]`);
+  if (el) el.classList.add('active');
+  document.getElementById('chat-placeholder').classList.add('hidden');
+  document.getElementById('chat-view').classList.remove('hidden');
+  document.getElementById('contact-name').textContent = user.display_name || user.phone_number;
+  document.getElementById('contact-avatar').textContent = (user.display_name || user.phone_number)[0].toUpperCase();
+  document.getElementById('contact-avatar').style.background = stringColor(user.display_name || user.phone_number);
+  document.getElementById('contact-status').textContent = user.status === 'online' ? 'online' : 'offline';
+  if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.add('chat-open'); }
+  loadMessages(user.id);
+}
+
+function closeChat() {
+  currentChat = null;
+  document.getElementById('chat-view').classList.add('hidden');
+  document.getElementById('chat-placeholder').classList.remove('hidden');
+  document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('sidebar').classList.remove('chat-open');
+}
+
+function loadMessages(userId) {
+  const msgs = DB.messages().filter(m =>
+    (m.sender_id === currentUser.id && m.receiver_id === userId) ||
+    (m.sender_id === userId && m.receiver_id === currentUser.id)
+  ).sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+  const container = document.getElementById('messages-area');
+  container.innerHTML = '';
+  if (!msgs.length) { container.innerHTML = '<div class="loading" style="text-align:center;padding:40px">No messages yet. Say hello!</div>'; }
+  else msgs.forEach(m => appendMessage(m, false));
+  scrollToBottom();
+}
+
+function appendMessage(msg, animate=true) {
+  const container = document.getElementById('messages-area');
+  const empty = container.querySelector('.loading'); if (empty) empty.remove();
+  const div = document.createElement('div');
+  const isSent = msg.sender_id === currentUser.id;
+  div.className = `message ${isSent ? 'sent' : 'received'}`;
+  if (animate) div.style.animation = 'msgSlide 0.25s ease-out';
+  const time = new Date(msg.created_at).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  div.innerHTML = `${escapeHtml(msg.content)}<div class="message-time">${time}</div>`;
+  container.appendChild(div);
+  scrollToBottom();
+}
+
+function scrollToBottom() {
+  const area = document.getElementById('messages-area');
+  area.scrollTop = area.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById('message-input');
+  const content = input.value.trim();
+  if (!content || !currentChat) return;
+
+  const msg = {
+    id: nextId('messages'), sender_id: currentUser.id, receiver_id: currentChat.id,
+    content, created_at: new Date().toISOString(), messageType: 'text'
+  };
+  const msgs = DB.messages(); msgs.push(msg); DB.setMessages(msgs);
+  appendMessage(msg);
+  input.value = '';
+
+  // Simulate reply after random delay
+  setTimeout(() => simulateReply(currentChat.id), 1500 + Math.random() * 3000);
+}
+
+function simulateReply(fromId) {
+  if (!currentChat || currentChat.id !== fromId) return;
+  const replies = ['Hey! 👋','That sounds great!','I agree 😊','Interesting...','Can you tell me more?','Nice!','Thanks for letting me know','lol 😂','I will check it out','See you soon!'];
+  const msg = {
+    id: nextId('messages'), sender_id: fromId, receiver_id: currentUser.id,
+    content: replies[Math.floor(Math.random() * replies.length)],
+    created_at: new Date().toISOString(), messageType: 'text'
+  };
+  const msgs = DB.messages(); msgs.push(msg); DB.setMessages(msgs);
+  appendMessage(msg);
+  document.getElementById('typing-indicator').classList.add('hidden');
+}
+
+function loadChatAds() {
+  const ads = DB.ads().filter(a => a.active === 1 && a.position === 'chat_top');
+  const banner = document.getElementById('ad-banner');
+  if (ads.length) {
+    const ad = ads[0];
+    banner.innerHTML = `
+      <div class="ad-item" onclick="clickAd(${ad.id}, '${ad.link}')">
+        ${ad.image_url ? `<img src="${escapeHtml(ad.image_url)}" alt="">` : ''}
+        <div class="ad-text">
+          <div class="ad-title">${escapeHtml(ad.title)}</div>
+          ${ad.content ? `<div class="ad-desc">${escapeHtml(ad.content)}</div>` : ''}
+        </div>
+        <span class="ad-badge">Ad</span>
+      </div>`;
+  } else banner.innerHTML = '';
+}
+
+function clickAd(id, link) {
+  const ads = DB.ads();
+  const ad = ads.find(a => a.id === id);
+  if (ad) { ad.clicks++; DB.setAds(ads); }
+  if (link) window.open(link, '_blank');
+}
+
+/* ======================== ADMIN ======================== */
+let adminToken = null, editingAdId = null;
+
+function initAdmin() {
+  adminToken = DB.adminSession();
+  if (!adminToken) {
+    document.getElementById('admin-login').classList.remove('hidden');
+    ['dashboard','users','messages','ads'].forEach(t => document.getElementById('tab-'+t).classList.add('hidden'));
+  } else {
+    document.getElementById('admin-login').classList.add('hidden');
+    showAdminTab('dashboard', document.querySelector('.admin-nav li.active'));
+  }
+}
+
+function adminLogin() {
+  const user = document.getElementById('admin-user').value;
+  const pass = document.getElementById('admin-pass').value;
+  if (user === 'admin' && pass === 'admin123') {
+    adminToken = 'admin_' + Date.now();
+    DB.setAdminSession(adminToken);
+    document.getElementById('admin-login').classList.add('hidden');
+    showAdminTab('dashboard', document.querySelector('.admin-nav li.active'));
+    showToast('Welcome, Admin');
+  } else { showToast('Invalid credentials'); }
+}
+
+function logoutAdmin() {
+  adminToken = null; DB.setAdminSession('');
+  navigate('landing');
+}
+
+function showAdminTab(tab, el) {
+  if (!adminToken) { showToast('Please login first'); return; }
+  currentTab = tab;
+  ['dashboard','users','messages','ads'].forEach(t => document.getElementById('tab-'+t).classList.add('hidden'));
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+  document.querySelectorAll('.admin-nav li').forEach(li => li.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('page-title').textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
+  if (tab === 'dashboard') loadStats();
+  if (tab === 'users') loadAdminUsers();
+  if (tab === 'messages') loadAdminMessages();
+  if (tab === 'ads') loadAdminAds();
+}
+
+function loadStats() {
+  const users = DB.users().length;
+  const msgs = DB.messages().length;
+  const ads = DB.ads().filter(a => a.active === 1).length;
+  const clicks = DB.ads().reduce((sum, a) => sum + (a.clicks || 0), 0);
+  document.getElementById('stat-users').textContent = users;
+  document.getElementById('stat-messages').textContent = msgs;
+  document.getElementById('stat-ads').textContent = ads;
+  document.getElementById('stat-clicks').textContent = clicks;
+}
+
+function loadAdminUsers() {
+  const tbody = document.querySelector('#users-table tbody');
+  tbody.innerHTML = '';
+  DB.users().forEach(u => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${u.id}</td>
+      <td>${escapeHtml(u.phone_number)}</td>
+      <td>${escapeHtml(u.display_name || '')}</td>
+      <td><span class="status-badge ${u.status}">${u.status}</span></td>
+      <td>${new Date(u.created_at).toLocaleDateString()}</td>
+      <td><button class="btn-small btn-delete" onclick="deleteUser(${u.id})">Delete</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function deleteUser(id) {
+  if (!confirm('Delete this user?')) return;
+  let users = DB.users(); users = users.filter(u => u.id !== id); DB.setUsers(users);
+  let msgs = DB.messages(); msgs = msgs.filter(m => m.sender_id !== id && m.receiver_id !== id); DB.setMessages(msgs);
+  loadAdminUsers(); loadStats();
+}
+
+function loadAdminMessages() {
+  const tbody = document.querySelector('#messages-table tbody');
+  tbody.innerHTML = '';
+  const users = DB.users();
+  const msgs = DB.messages().slice().reverse();
+  msgs.forEach(m => {
+    const from = users.find(u => u.id === m.sender_id);
+    const to = users.find(u => u.id === m.receiver_id);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${m.id}</td>
+      <td>${escapeHtml(from ? (from.display_name || from.phone_number) : m.sender_id)}</td>
+      <td>${escapeHtml(to ? (to.display_name || to.phone_number) : m.receiver_id)}</td>
+      <td>${escapeHtml(m.content.substring(0,50))}${m.content.length>50?'...':''}</td>
+      <td>${new Date(m.created_at).toLocaleString()}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function loadAdminAds() {
+  const tbody = document.querySelector('#ads-table tbody');
+  tbody.innerHTML = '';
+  DB.ads().forEach(ad => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${ad.id}</td>
+      <td>${escapeHtml(ad.title)}</td>
+      <td>${ad.position}</td>
+      <td>${ad.clicks || 0}</td>
+      <td><span class="status-badge ${ad.active ? 'active' : 'inactive'}">${ad.active ? 'Active' : 'Inactive'}</span></td>
+      <td>
+        <button class="btn-small btn-edit" onclick="editAd(${ad.id})">Edit</button>
+        <button class="btn-small btn-delete" onclick="deleteAd(${ad.id})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openAdModal() {
+  editingAdId = null;
+  document.getElementById('modal-title').textContent = 'Create Advertisement';
+  document.getElementById('ad-title').value = '';
+  document.getElementById('ad-content').value = '';
+  document.getElementById('ad-image').value = '';
+  document.getElementById('ad-link').value = '';
+  document.getElementById('ad-position').value = 'chat_top';
+  document.getElementById('ad-active').checked = true;
+  document.getElementById('ad-modal').classList.remove('hidden');
+}
+
+function editAd(id) {
+  const ad = DB.ads().find(a => a.id === id);
+  if (!ad) return;
+  editingAdId = id;
+  document.getElementById('modal-title').textContent = 'Edit Advertisement';
+  document.getElementById('ad-title').value = ad.title;
+  document.getElementById('ad-content').value = ad.content || '';
+  document.getElementById('ad-image').value = ad.image_url || '';
+  document.getElementById('ad-link').value = ad.link || '';
+  document.getElementById('ad-position').value = ad.position || 'chat_top';
+  document.getElementById('ad-active').checked = ad.active === 1;
+  document.getElementById('ad-modal').classList.remove('hidden');
+}
+
+function closeAdModal() { document.getElementById('ad-modal').classList.add('hidden'); editingAdId = null; }
+
+function saveAd() {
+  const body = {
+    title: document.getElementById('ad-title').value,
+    content: document.getElementById('ad-content').value,
+    image_url: document.getElementById('ad-image').value,
+    link: document.getElementById('ad-link').value,
+    position: document.getElementById('ad-position').value,
+    active: document.getElementById('ad-active').checked ? 1 : 0
+  };
+  let ads = DB.ads();
+  if (editingAdId) {
+    const idx = ads.findIndex(a => a.id === editingAdId);
+    if (idx >= 0) { ads[idx] = { ...ads[idx], ...body }; }
+  } else {
+    ads.push({ id: nextId('ads'), ...body, clicks: 0 });
+  }
+  DB.setAds(ads);
+  closeAdModal(); loadAdminAds(); loadStats();
+}
+
+function deleteAd(id) {
+  if (!confirm('Delete this ad?')) return;
+  let ads = DB.ads(); ads = ads.filter(a => a.id !== id); DB.setAds(ads);
+  loadAdminAds(); loadStats();
+}
+
+/* ======================== INIT ======================== */
+// Auto-navigate if session exists
+const sess = DB.session();
+if (sess) {
+  if (sess.user && sess.user.is_admin) navigate('admin');
+  else navigate('chat');
+} else {
+  navigate('landing');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat6 Messenger</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container" id="chat-app">
+    <!-- Contacts / Chat List -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="user-info">
+          <div class="avatar" id="user-avatar">C6</div>
+          <div>
+            <div class="user-name" id="user-name">Chat6 User</div>
+            <div class="user-status">online</div>
+          </div>
+        </div>
+        <button class="btn-icon" onclick="logout()" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+      
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-users" placeholder="Search contacts..." oninput="searchUsers()">
+      </div>
+      
+      <div class="contacts-list" id="contacts-list">
+        <div class="loading">Loading contacts...</div>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area" id="chat-area">
+      <div class="chat-placeholder" id="chat-placeholder">
+        <div class="placeholder-content">
+          <i class="fas fa-comments"></i>
+          <h2>Select a contact to start chatting</h2>
+          <p>Your messages are secure and private</p>
+        </div>
+      </div>
+
+      <div class="chat-view hidden" id="chat-view">
+        <div class="chat-header">
+          <button class="btn-icon back-btn" onclick="closeChat()" id="back-btn">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <div class="chat-contact-info">
+            <div class="avatar" id="contact-avatar">U</div>
+            <div>
+              <div class="contact-name" id="contact-name">User</div>
+              <div class="contact-status" id="contact-status">offline</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ad-banner" id="ad-banner"></div>
+
+        <div class="messages-area" id="messages-area">
+        </div>
+
+        <div class="typing-indicator hidden" id="typing-indicator">
+          <span class="typing-dots"></span> typing...
+        </div>
+
+        <div class="message-input-area">
+          <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+          <button class="btn-send" onclick="sendMessage()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/chat.js"></script>
+</body>
+</html>
